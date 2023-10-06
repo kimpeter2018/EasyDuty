@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "972735238535",
+    "project_id": "one-duty",
+    "storage_bucket": "one-duty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972735238535:android:1a34066e68ad4ba8df8322",
+        "android_client_info": {
+          "package_name": "com.example.oneduty"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7hAmkBGwp2KBACWB2VbU8GRmGwxxe-z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
