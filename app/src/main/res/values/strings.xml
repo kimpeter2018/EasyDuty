@@ -2,4 +2,6 @@
     <string name="app_name">OneDuty</string>
     <string name="text_calendar">CalendarText</string>
     <string name="web_client_id">972735238535-od9uitigrhf6tgjnr1n4mt69hskd9ofa.apps.googleusercontent.com</string>
+    <string name="text_list">list</string>
+    <string name="text_profile">profile</string>
 </resources>

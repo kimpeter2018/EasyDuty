@@ -1,5 +1,6 @@
 package com.example.oneduty
 
+import CalendarScreen
 import GoogleAuthUiClient
 import ProfileScreen
 import SignInScreen
@@ -16,22 +17,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.oneduty.sign_in.SignInViewModel
 import com.example.oneduty.ui.theme.OneDutyTheme
 import com.google.android.gms.auth.api.identity.Identity
-import com.kimminju99.myapplication.AnalysisScreen
-import com.kimminju99.myapplication.BottomNavItem
-import com.kimminju99.myapplication.CalendarScreen
-import com.kimminju99.myapplication.SettingsScreen
-import com.kimminju99.myapplication.TimelineScreen
 
 import kotlinx.coroutines.launch
 
@@ -72,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
                             LaunchedEffect(key1 = Unit) {
                                 if(googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("home")
+                                    navController.navigate("temp")
                                 }
                             }
 
@@ -98,7 +92,7 @@ class MainActivity : ComponentActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate("home")
+                                    navController.navigate("temp")
                                     viewModel.resetState()
                                 }
                             }
@@ -117,11 +111,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable("home") {
-                            ProfileScreen(
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                onSignOut = { onSignOut() }
-                            )
+                        composable("temp") {
+////                            ProfileScreen(
+////                                userData = googleAuthUiClient.getSignedInUser(),
+////                                onSignOut = { onSignOut() }
+////                            )
+                            MainScreenView(userData = googleAuthUiClient.getSignedInUser())
                         }
                     }
                 }
