@@ -14,6 +14,7 @@ import com.example.oneduty.sign_in.UserData
 
 @Composable
 fun CalendarScreen(userData: UserData?,) {
+    print("Here")
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -31,6 +32,8 @@ fun CalendarScreen(userData: UserData?,) {
 
 @Composable
 fun TimelineScreen() {
+    print("Here")
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -49,10 +52,6 @@ fun TimelineScreen() {
 
 @Composable
 fun SettingsScreen() {
-    print("here")
-    print("here")
-    print("here")
-    print("here")
     Box(
         modifier = Modifier
             .fillMaxSize()

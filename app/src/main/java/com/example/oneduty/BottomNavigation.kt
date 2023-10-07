@@ -1,6 +1,9 @@
 package com.example.oneduty
 
+import CalendarScreen
 import ProfileScreen
+import SettingsScreen
+import TimelineScreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -24,7 +27,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -33,7 +38,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.oneduty.sign_in.UserData
 import java.net.URLEncoder
@@ -41,34 +51,34 @@ import java.nio.charset.StandardCharsets
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BottomNavigation(navController: NavHostController) {
-    val items = listOf<BottomNavItem>(
+fun BottomNavigation(navController: NavController, userData: UserData?) {
+    val items = listOf(
         BottomNavItem.Calendar,
         BottomNavItem.Timeline,
         BottomNavItem.Settings
     )
 
-    val selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+
+        var navigationSelectedItem by remember {
+            mutableStateOf(0)
+        }
         Scaffold(
+            modifier = Modifier.fillMaxSize(),
             bottomBar = {
                 NavigationBar {
-                    items.forEachIndexed { index, item ->
+                    items.forEachIndexed {index, item ->
                         NavigationBarItem(
-                            selected = selectedItemIndex == index,
+                            selected = index == navigationSelectedItem,
                             onClick = {
-                                val encodedUrl = URLEncoder.encode(item.screenRoute, StandardCharsets.UTF_8.toString())
-                                navController.navigate(encodedUrl) {
-                                    navController.graph.startDestinationRoute?.let {
-                                        popUpTo(it) { saveState = true }
+                                navigationSelectedItem = index
+                                navController.navigate(item.screenRoute) {
+                                    navController.graph.startDestinationRoute?.let { screenRoute ->
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
                                     }
-                                    launchSingleTop = true
                                     restoreState = true
+                                    launchSingleTop = true
                                 }
                             },
                             label = { Text(stringResource(id = item.title), fontSize = 9.sp) },
@@ -87,7 +97,17 @@ fun BottomNavigation(navController: NavHostController) {
                 }
             }
         ) {
-
+            NavHost(navController = navController  as NavHostController, startDestination = BottomNavItem.Calendar.screenRoute) {
+                composable(BottomNavItem.Calendar.screenRoute) {
+                    CalendarScreen(userData = userData)
+                }
+                composable(BottomNavItem.Timeline.screenRoute) {
+                    TimelineScreen()
+                }
+                composable(BottomNavItem.Settings.screenRoute) {
+                    SettingsScreen()
+                }
+            }
         }
-    }
+
 }

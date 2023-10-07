@@ -47,17 +47,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+                    val navBarController = rememberNavController()
                     fun onSignOut() {
-                            lifecycleScope.launch {
-                                googleAuthUiClient.signOut()
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Signed out",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                        lifecycleScope.launch {
+                            googleAuthUiClient.signOut()
+                            Toast.makeText(
+                                applicationContext,
+                                "Signed out",
+                                Toast.LENGTH_LONG
+                            ).show()
 
-                                navController.popBackStack()
-                            }
+                            navController.popBackStack()
+                        }
                     }
                     NavHost(navController = navController, startDestination = "sign_in") {
                         composable("sign_in") {
@@ -65,15 +66,25 @@ class MainActivity : ComponentActivity() {
                             val state by viewModel.state.collectAsStateWithLifecycle()
 
                             LaunchedEffect(key1 = Unit) {
-                                if(googleAuthUiClient.getSignedInUser() != null) {
-                                    navController.navigate("temp")
+                                if (googleAuthUiClient.getSignedInUser() != null) {
+                                    navController.popBackStack()
+                                    print("THIEHIHET")
+                                    print("FICL")
+                                    print("여기까지")
+                                    print("여기까지")
+                                    print("여기까지")
+                                    navController.navigate("temp"){
+
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
                                 }
                             }
 
                             val launcher = rememberLauncherForActivityResult(
                                 contract = ActivityResultContracts.StartIntentSenderForResult(),
                                 onResult = { result ->
-                                    if(result.resultCode == RESULT_OK) {
+                                    if (result.resultCode == RESULT_OK) {
                                         lifecycleScope.launch {
                                             val signInResult = googleAuthUiClient.signInWithIntent(
                                                 intent = result.data ?: return@launch
@@ -85,14 +96,19 @@ class MainActivity : ComponentActivity() {
                             )
 
                             LaunchedEffect(key1 = state.isSignInSuccessful) {
-                                if(state.isSignInSuccessful) {
+                                if (state.isSignInSuccessful) {
                                     Toast.makeText(
                                         applicationContext,
                                         "Sign in successful",
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                    navController.navigate("temp")
+                                    navController.popBackStack()
+                                    navController.navigate("temp"){
+
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
                                     viewModel.resetState()
                                 }
                             }
@@ -112,11 +128,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("temp") {
-////                            ProfileScreen(
-////                                userData = googleAuthUiClient.getSignedInUser(),
-////                                onSignOut = { onSignOut() }
-////                            )
-                            MainScreenView(userData = googleAuthUiClient.getSignedInUser())
+//                           ProfileScreen(
+//                               userData = googleAuthUiClient.getSignedInUser(),
+//                                onSignOut = { onSignOut() }
+//                            )
+
+                            MainScreenView(
+                                userData = googleAuthUiClient.getSignedInUser(),
+                                navController = navBarController,
+                            )
                         }
                     }
                 }
