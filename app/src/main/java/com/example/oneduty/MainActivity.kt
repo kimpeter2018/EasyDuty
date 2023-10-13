@@ -1,8 +1,6 @@
 package com.example.oneduty
 
-import CalendarScreen
 import GoogleAuthUiClient
-import ProfileScreen
 import SignInScreen
 import android.os.Bundle
 import android.widget.Toast
@@ -24,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.oneduty.sign_in.SignInViewModel
+import com.example.oneduty.starting.StartingScreenNavigation
 import com.example.oneduty.ui.theme.OneDutyTheme
 import com.google.android.gms.auth.api.identity.Identity
 
@@ -47,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val navBarController = rememberNavController()
+                    val navStartController = rememberNavController()
                     fun onSignOut() {
                         lifecycleScope.launch {
                             googleAuthUiClient.signOut()
@@ -68,11 +67,6 @@ class MainActivity : ComponentActivity() {
                             LaunchedEffect(key1 = Unit) {
                                 if (googleAuthUiClient.getSignedInUser() != null) {
                                     navController.popBackStack()
-                                    print("THIEHIHET")
-                                    print("FICL")
-                                    print("여기까지")
-                                    print("여기까지")
-                                    print("여기까지")
                                     navController.navigate("temp"){
 
                                         popUpTo(navController.graph.startDestinationId)
@@ -128,15 +122,10 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("temp") {
-//                           ProfileScreen(
-//                               userData = googleAuthUiClient.getSignedInUser(),
-//                                onSignOut = { onSignOut() }
-//                            )
-
-                            MainScreenView(
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                navController = navBarController,
+                            StartingScreenNavigation(
+                               userData = googleAuthUiClient.getSignedInUser(), navController = navStartController
                             )
+
                         }
                     }
                 }
